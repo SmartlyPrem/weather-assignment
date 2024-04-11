@@ -16,6 +16,7 @@ export default function Listing() {
 
     useEffect(
         () => {
+            listingData({key : "Enter"});
             const lsHistory = localStorage.getItem("history");
             if (lsHistory != null) {
                 setHistory(JSON.parse(lsHistory));
@@ -56,22 +57,26 @@ export default function Listing() {
                 )
             inpRef.current.value = "";
         } else {
-            axios.get("https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records?limit=100")
-                .then(
-                    (success) => {
-                        if (success.status == 200) {
-                            setLoading(false);
-                            setListData(success.data.results);
-                        } else {
-                            setLoading(false)
-                        }
-                    }
-                ).catch(
-                    (error) => {
-                        setLoading(true)
-                    }
-                )
+            fetchListData();
         }
+    }
+
+    function fetchListData() {
+        axios.get("https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records?limit=100")
+            .then(
+                (success) => {
+                    if (success.status == 200) {
+                        setLoading(false);
+                        setListData(success.data.results);
+                    } else {
+                        setLoading(false)
+                    }
+                }
+            ).catch(
+                (error) => {
+                    setLoading(true)
+                }
+            )
     }
 
     function goOnWeather(lat, lon) {
